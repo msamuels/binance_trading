@@ -6,101 +6,111 @@ from binance.client import Client
 from binance.enums import *
 
 
-class BinanceTrade:
+def process_args(self):
+    """Get argruments from command line
+    :return:
+    """
 
-    def __init__(self, symbol, price, quantity, order_type):
-        """Hello World client constructor
+    info = sys.argv
+    arglist = info[1:]
 
-        :return:
-        """
+    unixOptions = "s:p:q:"
+    gnuOptions = ["s=", "p=", "q=", "ot="]
 
-        self.API_KEY = config.API_KEY
-        self.API_SECRET = config.API_SECRET
-        self.symbol = symbol #'ASTETH'
-        self.price = price #148.05
-        self.quantity = quantity #0.08548  # .00009 less than buy price
-        # order_type = SIDE_BUY
-        self.order_type = order_type #SIDE_SELL
+    print(info[1])
+    sys.exit(0)
 
-        self.client = Client(config.API_KEY, config.API_SECRET)
 
-    def process_args(self):
-        """Get argruments from command line
-        :return:
-        """
+def get_all_orders(client, symbol):
+    """Get all orders
+    :return:
+    """
 
-        info = sys.argv
-        arglist = info[1:]
+    r = client.get_all_orders(symbol=symbol, requests_params={'timeout': 5})
+    print(r)
 
-        unixOptions = "s:p:q:"
-        gnuOptions = ["s=", "p=", "q=", "ot="]
 
-        print(info[1])
-        sys.exit(0)
+def get_trade_fee(client, symbol):
+    """ Get fee for trade
 
-    def get_all_orders(self, client):
-        """Get all orders
-        :return:
-        """
+    :returns: l ist of dictionaries containing "maker"(bid), "taker"(ask) and "symbol" keys
+    """
 
-        r = client.get_all_orders(symbol=self.symbol, requests_params={'timeout': 5})
-        print(r)
+    """
+    for key in fees:
+        for d in fees[key]:
+            print(d['maker'])
+            print(d['taker'])
+    """
 
-    def get_trade_fee(self, client):
-        """ Get fee for trade
+    fees = client.get_trade_fee(symbol=symbol)
+    # fees['tradeFee']
+    return fees
 
-        :returns: list of dictionaries containing "maker"(bid), "taker"(ask) and "symbol" keys
-        """
 
-        """
-        for key in fees:
-            for d in fees[key]:
-                print(d['maker'])
-                print(d['taker'])
-        """
+def get_symbol_balance(client, symbol):
+    """Get account balance for the given symbol
 
-        fees = client.get_trade_fee(symbol=self.symbol)
-        print(fees['tradeFee'])
+    :return: dictionary with asset balance "free" as float
+    """
 
-        return fees['tradeFee']
+    # ETH
+    eth_balance = client.get_asset_balance(asset=symbol)
+    return eth_balance['free']
 
-    def get_symbol_balance(self, client):
-        """Get account balance for the given symbol
 
-        :return: dictionary with asset balance "free" as float
-        """
+def create_order(client, symbol, order_type, quantity, price):
+    """Create a sell or buy order
+    @TODO: find symbols moving over x percent
+    :return:
+    """
 
-        # ETH
-        eth_balance = client.get_asset_balance(asset=self.symbol)
-        return eth_balance['free']
+    # Sell symbol
+    order = client.create_order(
+        symbol=symbol,
+        side=order_type,
+        type=ORDER_TYPE_LIMIT,
+        timeInForce=TIME_IN_FORCE_GTC,
+        quantity=quantity,
+        price=price)
 
-    def create_order(self, client):
-        """Create a sell or buy order
-        @TODO: find symbols moving over x percent
-        :return:
-        """
+    for oid in order:
+        print(order[oid])
 
-        # Sell symbol
-        order = client.create_order(
-            symbol=self.symbol,
-            side=self.order_type,
-            type=ORDER_TYPE_LIMIT,
-            timeInForce=TIME_IN_FORCE_GTC,
-            quantity=self.quantity,
-            price=self.price)
 
-        """order = client.get_order(
-            symbol='MCOETH',
-            orderId='orderId')
-        """
+def get_order(client, symbol, orderid):
+    """Get order
+    :return order
+    """
 
-        for oid in order:
-            print(order[oid])
+    order = client.get_order(
+        symbol=symbol,
+        orderId='orderId')
 
-    def get_klines(self, client):
-        """ Get klines
-        :return:
-        """
+    return order
 
-        klines = client.get_historical_klines(self.symbol, Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
-        return klines
+
+def get_klines(client, symbol):
+    """ Get klines
+    :return:
+    """
+
+    klines = client.get_historical_klines(symbol, Client.KLINE_INTERVAL_1MINUTE, "1 day ago UTC")
+    return klines
+
+
+def main(symbol):
+    """main
+
+    :return:
+    """
+
+    client = Client(config.API_KEY, config.API_SECRET)
+
+    fee = get_trade_fee(client, symbol)
+    return fee
+
+
+if __name__ == '__main__':
+    crypto = 'ETHUSDT'
+    main(crypto)

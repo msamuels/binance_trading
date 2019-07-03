@@ -12,15 +12,13 @@ class TestBinanceTradeMethods(unittest.TestCase):
     def test_get_all_orders(self):
         pass
 
-    @patch('app.models.binance_trade.Client')
-    def test_get_trade_fee(self, mock_client):
+    def test_get_trade_fee(self):
 
-        client = Mock()
+        mock_client = Mock()
 
-        mock_client.get_trade_fee('test')
-        binance_trade.BinanceTrade.get_trade_fee(client, mock_client)
+        binance_trade.get_trade_fee(mock_client, 'symbol')
 
-        assert mock_client.get_trade_fee.called_with('test')
+        assert mock_client.get_trade_fee.called_with('symbol')
 
     def test_get_symbol_balance(self):
         pass
