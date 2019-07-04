@@ -10,7 +10,11 @@ class TestBinanceTradeMethods(unittest.TestCase):
         pass
 
     def test_get_all_orders(self):
-        pass
+        mock_client = Mock()
+
+        binance_trade.get_all_orders(mock_client, 'symbol')
+
+        mock_client.get_all_orders.assert_called_with(requests_params={'timeout': 5}, symbol='symbol')
 
     def test_get_trade_fee(self):
 
@@ -20,11 +24,23 @@ class TestBinanceTradeMethods(unittest.TestCase):
 
         mock_client.get_trade_fee.assert_called_with(symbol='symbol')
 
-    def test_get_symbol_balance(self):
-        pass
+    def test_get_asset_balance(self):
+        mock_client = Mock()
+
+        binance_trade.get_asset_balance(mock_client, 'symbol')
+
+        mock_client.get_asset_balance.assert_called_with(asset='symbol')
 
     def test_create_order(self):
-        pass
+        mock_client = Mock()
+        binance_trade.create_order(mock_client, 'symbol', 'order_type', 'quantity', 'price')
+
+        mock_client.create_order.assert_called_with(symbol='symbol',
+                                                    side='order_type',
+                                                    type='LIMIT',
+                                                    timeInForce='GTC',
+                                                    quantity='quantity',
+                                                    price='price')
 
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@ def get_all_orders(client, symbol):
     """
 
     r = client.get_all_orders(symbol=symbol, requests_params={'timeout': 5})
-    print(r)
+    return r
 
 
 def get_trade_fee(client, symbol):
@@ -48,15 +48,16 @@ def get_trade_fee(client, symbol):
     return fees
 
 
-def get_symbol_balance(client, symbol):
+def get_asset_balance(client, symbol):
     """Get account balance for the given symbol
 
     :return: dictionary with asset balance "free" as float
+        eth_balance['free']
     """
 
     # ETH
     eth_balance = client.get_asset_balance(asset=symbol)
-    return eth_balance['free']
+    return eth_balance
 
 
 def create_order(client, symbol, order_type, quantity, price):
@@ -74,8 +75,9 @@ def create_order(client, symbol, order_type, quantity, price):
         quantity=quantity,
         price=price)
 
-    for oid in order:
-        print(order[oid])
+    #for oid in order:
+    #    print(order[oid])
+    return order
 
 
 def get_order(client, symbol, orderid):
