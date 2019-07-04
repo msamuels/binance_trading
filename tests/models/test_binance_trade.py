@@ -18,7 +18,7 @@ class TestBinanceTradeMethods(unittest.TestCase):
 
         binance_trade.get_trade_fee(mock_client, 'symbol')
 
-        assert mock_client.get_trade_fee.called_with('symbol')
+        mock_client.get_trade_fee.assert_called_with(symbol='symbol')
 
     def test_get_symbol_balance(self):
         pass

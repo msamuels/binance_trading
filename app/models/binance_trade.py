@@ -100,7 +100,13 @@ def get_klines(client, symbol):
 
 
 def main(symbol):
-    """main
+    """ 1) Get main token balance. ie ETH or BTC
+        2) Ensure balance > $10
+        3) Calculate cost of purchase + trade fee
+        4) Create and submit Buy order
+        5) Get order ID
+        6) Submit Stop limit order 2% lower than purchase price
+        7) Poll symbol price to see if > 5% of purchase
 
     :return:
     """
