@@ -6,21 +6,6 @@ from binance.client import Client
 from binance.enums import *
 
 
-def process_args(self):
-    """Get argruments from command line
-    :return:
-    """
-
-    info = sys.argv
-    arglist = info[1:]
-
-    unixOptions = "s:p:q:"
-    gnuOptions = ["s=", "p=", "q=", "ot="]
-
-    print(info[1])
-    sys.exit(0)
-
-
 def get_all_orders(client, symbol):
     """Get all orders
     :return:
@@ -62,7 +47,6 @@ def get_asset_balance(client, symbol):
 
 def create_order(client, symbol, order_type, quantity, price):
     """Create a sell or buy order
-    @TODO: find symbols moving over x percent
     :return:
     """
 
@@ -101,7 +85,14 @@ def get_klines(client, symbol):
     return klines
 
 
-def main(symbol):
+def is_balance_enough(balance):
+    if balance > 10:
+        return 1
+    else:
+        return 0
+
+
+def main(symbol, price, qty):
     """ 1) Get main token balance. ie ETH or BTC
         2) Ensure balance > $10
         3) Calculate cost of purchase + trade fee
@@ -115,10 +106,33 @@ def main(symbol):
 
     client = Client(config.API_KEY, config.API_SECRET)
 
-    fee = get_trade_fee(client, symbol)
-    return fee
+    # 1  Get main token balance.
+    balance = get_asset_balance(client, 'USDT')
+
+    # 2 Ensure balance > $10
+    if is_balance_enough(balance['free']):
+
+        # 3 Calculate cost of purchase + trade fee
+        fee = get_trade_fee(client, symbol)
+
+        # 4 Create and submit Buy order
+        # 5 Get order ID
+        order = create_order(client, symbol, order_type=SIDE_BUY, quantity=qty, price=price)
+
+        # check if the order status
+        if order['status'] == 'FILLED':
+            # 6 Submit Stop limit order 2% lower than purchase price
+            stop_limit_price = price - (price * .02)
+            stop_limit_order = create_order(client, symbol, order_type=ORDER_TYPE_STOP_LOSS_LIMIT,
+                                            quantity=qty, price=stop_limit_price)
 
 
 if __name__ == '__main__':
-    crypto = 'ETHUSDT'
-    main(crypto)
+    info = sys.argv
+    
+    symbol_to_purchase = info[1]
+    p = info[2]    
+    q = info[3]
+
+    main(symbol_to_purchase, p, q)
+

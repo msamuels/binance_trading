@@ -41,6 +41,11 @@ class TestBinanceTradeMethods(unittest.TestCase):
                                                     timeInForce='GTC',
                                                     quantity='quantity',
                                                     price='price')
+        
+
+    def test_is_balance_enough(self):
+        balance = 5
+        assert binance_trade.is_balance_enough(balance) == 0
 
 
 if __name__ == '__main__':
