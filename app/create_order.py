@@ -1,5 +1,5 @@
 import sys
-from app.models import binance_trade
+from app.logic import create_execute_buy
 
 if __name__ == '__main__':
     info = sys.argv
@@ -9,7 +9,7 @@ if __name__ == '__main__':
         p = info[2]    
         q = info[3]
 
-        binance_trade.main(symbol_to_purchase, p, q)
+        create_execute_buy.main(symbol_to_purchase, p, q)
 
     else:
         print("Missing arguments")
