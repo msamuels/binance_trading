@@ -1,2 +1,8 @@
 API_KEY = REPLACE_ME
 API_SECRET = REPLACE_ME
+
+# the coin you'll use to do the purchasing
+STORE_OF_VALUE_COIN = REPLACE_ME
+
+# % loss to set sell order
+PERCENT_STOP_LOSS = REPLACE_ME
