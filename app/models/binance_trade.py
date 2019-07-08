@@ -1,6 +1,4 @@
-import sys
-import getopt
-import config
+from app import config
 
 from binance.client import Client
 from binance.enums import *
@@ -125,14 +123,4 @@ def main(symbol, price, qty):
             stop_limit_price = price - (price * .02)
             stop_limit_order = create_order(client, symbol, order_type=ORDER_TYPE_STOP_LOSS_LIMIT,
                                             quantity=qty, price=stop_limit_price)
-
-
-if __name__ == '__main__':
-    info = sys.argv
-    
-    symbol_to_purchase = info[1]
-    p = info[2]    
-    q = info[3]
-
-    main(symbol_to_purchase, p, q)
 

@@ -41,7 +41,6 @@ class TestBinanceTradeMethods(unittest.TestCase):
                                                     timeInForce='GTC',
                                                     quantity='quantity',
                                                     price='price')
-        
 
     def test_is_balance_enough(self):
         balance = 5
