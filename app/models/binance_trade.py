@@ -1,4 +1,5 @@
-from app import config
+from app.config import API_SECRET
+from app.config import API_KEY
 
 from binance.client import Client
 from binance.enums import *
@@ -102,7 +103,7 @@ def main(symbol, price, qty):
     :return:
     """
 
-    client = Client(config.API_KEY, config.API_SECRET)
+    client = Client(API_KEY, API_SECRET)
 
     # 1  Get main token balance.
     balance = get_asset_balance(client, 'USDT')
