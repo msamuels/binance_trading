@@ -1,3 +1,6 @@
+# python create_order.py symbol price quanity
+# python create_order.py ETHUSDT 300.00 1
+
 import sys
 from app.logic import create_execute_buy
 
