@@ -1,5 +1,5 @@
 import sys
-from models import binance_trade
+from app.models import binance_trade
 
 if __name__ == '__main__':
     info = sys.argv
@@ -12,7 +12,7 @@ if __name__ == '__main__':
         binance_trade.main(symbol_to_purchase, p, q)
 
     else:
-        print "Missing arguments"
+        print("Missing arguments")
 
     sys.exit()
 
